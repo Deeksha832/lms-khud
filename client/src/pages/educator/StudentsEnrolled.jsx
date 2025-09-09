@@ -29,7 +29,7 @@ const StudentsEnrolled = () => {
                 <td className="md:px-4 px-2 py-3 flex items-center space-x-3">
                   <img
                     src={item.student.imageUrl}
-                    alt=""
+                    alt="student"
                     className="w-9 h-9 rounded-full"
                   />
                   <span className="truncate">{item.student.name}</span>
