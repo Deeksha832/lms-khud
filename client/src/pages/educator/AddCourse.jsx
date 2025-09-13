@@ -5,6 +5,7 @@ import Quill from 'quill';
 import uniqid from 'uniqid';
 import axios from 'axios'
 import { AppContext } from '../../context/AppContext';
+import { TaskChooseOrganization } from '@clerk/clerk-react';
 
 const AddCourse = () => {
 
@@ -112,6 +113,7 @@ const AddCourse = () => {
       formData.append('image', image)
 
       const token = await getToken()
+      console.log(token)
 
       const { data } = await axios.post(backendUrl + '/api/educator/add-course', formData,
         { headers: { Authorization: `Bearer ${token}` } }
