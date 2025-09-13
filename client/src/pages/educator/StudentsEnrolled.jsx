@@ -1,15 +1,40 @@
-import React, { useState } from 'react'
-import { dummyStudentEnrolled } from '../../assets/assets'
-import { useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import axios from 'axios';
+import { AppContext } from '../../context/AppContext';
+import { toast } from 'react-toastify';
 import Loading from '../../components/student/Loading';
+
 const StudentsEnrolled = () => {
-    const [enrolledStudents, setEnrolledStudents] = useState(null);
-    const fetchEnrolledStudents = async () => {
-        setEnrolledStudents(dummyStudentEnrolled)
+
+  const { backendUrl, getToken, isEducator } = useContext(AppContext)
+
+  const [enrolledStudents, setEnrolledStudents] = useState(null)
+
+  const fetchEnrolledStudents = async () => {
+    try {
+      const token = await getToken()
+
+      const { data } = await axios.get(backendUrl + '/api/educator/enrolled-students',
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+
+      if (data.success) {
+        setEnrolledStudents(data.enrolledStudents.reverse())
+      } else {
+        toast.success(data.message)
+      }
+
+    } catch (error) {
+      toast.error(error.message)
     }
-    useEffect(() => {
-        fetchEnrolledStudents()
-    }, [])
+  }
+
+  useEffect(() => {
+    if (isEducator) {
+      fetchEnrolledStudents()
+    }
+  }, [isEducator])
+
   return enrolledStudents ? (
     <div className="min-h-screen flex flex-col items-start justify-between md:p-8 md:pb-0 p-4 pt-8 pb-0">
       <div className="flex flex-col items-center max-w-4xl w-full overflow-hidden rounded-md bg-white border border-gray-500/20 ">
@@ -29,7 +54,7 @@ const StudentsEnrolled = () => {
                 <td className="md:px-4 px-2 py-3 flex items-center space-x-3">
                   <img
                     src={item.student.imageUrl}
-                    alt="student"
+                    alt=""
                     className="w-9 h-9 rounded-full"
                   />
                   <span className="truncate">{item.student.name}</span>
@@ -42,7 +67,7 @@ const StudentsEnrolled = () => {
         </table>
       </div>
     </div>
-  ):<Loading/>
-}
+  ) : <Loading />
+};
 
-export default StudentsEnrolled
+export default StudentsEnrolled;

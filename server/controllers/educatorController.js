@@ -1,7 +1,10 @@
-import { clerkClient } from '@clerk/express';
+import { v2 as cloudinary } from 'cloudinary'
 import Course from '../models/Course.js';
-import {v2 as cloudinary} from 'cloudinary';
+import { Purchase } from '../models/Purchase.js';
+import User from '../models/User.js';
+import { clerkClient } from '@clerk/express'
 
+// update role to educator
 export const updateRoleToEducator = async (req, res) => {
 
     try {
@@ -10,8 +13,8 @@ export const updateRoleToEducator = async (req, res) => {
 
         await clerkClient.users.updateUserMetadata(userId, {
             publicMetadata: {
-                role: "educator",
-            }
+                role: 'educator',
+            },
         })
 
         res.json({ success: true, message: 'You can publish a course now' })
@@ -22,6 +25,7 @@ export const updateRoleToEducator = async (req, res) => {
 
 }
 
+// Add New Course
 export const addCourse = async (req, res) => {
 
     try {
@@ -56,6 +60,7 @@ export const addCourse = async (req, res) => {
 
     }
 }
+
 // Get Educator Courses
 export const getEducatorCourses = async (req, res) => {
     try {
@@ -70,8 +75,6 @@ export const getEducatorCourses = async (req, res) => {
         res.json({ success: false, message: error.message })
     }
 }
-
-
 
 // Get Educator Dashboard Data ( Total Earning, Enrolled Students, No. of Courses)
 export const educatorDashboardData = async (req, res) => {
@@ -119,7 +122,6 @@ export const educatorDashboardData = async (req, res) => {
         res.json({ success: false, message: error.message });
     }
 };
-
 
 // Get Enrolled Students Data with Purchase Data
 export const getEnrolledStudentsData = async (req, res) => {
